@@ -286,10 +286,7 @@ class MainActivity : AppCompatActivity() {
         counterTxt.text = ("0:0${counter.toString()}")
         handler.removeCallbacks(runnable)
     }
-    override fun onStop() {
-        super.onStop()
-        resetCounter()
-    }
+
 
 
     fun checkWin() {
