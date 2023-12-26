@@ -261,11 +261,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCounter() {
+        var minute=0
         runnable = object : Runnable {
             override fun run() {
                 counter++
-                counterTxt.text = counter.toString()
-
+                if(counter==60){
+                    minute++
+                    counter=0
+                }
+                if(counter>=10) {
+                    counterTxt.text = ("${minute.toString()}:${counter.toString()}")
+                }
+                else{
+                    counterTxt.text=("${minute.toString()}:0${counter.toString()}")
+                }
                 handler.postDelayed(this, 1000)
             }
         }
@@ -274,7 +283,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetCounter() {
         counter = 0
-        counterTxt.text = counter.toString()
+        counterTxt.text = ("0:0${counter.toString()}")
         handler.removeCallbacks(runnable)
     }
     override fun onStop() {
@@ -285,8 +294,6 @@ class MainActivity : AppCompatActivity() {
 
     fun checkWin() {
         var wins=0
-
-
 
         if (option == 1) {
 
@@ -396,6 +403,10 @@ class MainActivity : AppCompatActivity() {
         matchon=false
 
         resetCounter()
+        handler.postDelayed({
+            startCounter()
+        },1000)
+
     }
 
 }
