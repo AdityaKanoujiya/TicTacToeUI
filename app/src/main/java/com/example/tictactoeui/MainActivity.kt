@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var img8: ImageView
     lateinit var img9: ImageView
 
-    lateinit var counter : TextView
+    lateinit var counterTxt : TextView
     lateinit var playersturn : TextView
 
     var c1="empty"
@@ -65,7 +65,10 @@ class MainActivity : AppCompatActivity() {
     var v9=0
 
 
-var couunt = false
+    private lateinit var counterTextView: TextView
+    private var counter = 0
+    private var handler: Handler = Handler()
+    private lateinit var runnable: Runnable
 
 
 
@@ -98,30 +101,27 @@ var couunt = false
         img8= findViewById(R.id.img8)
         img9= findViewById(R.id.img9)
 
-        counter=findViewById(R.id.counter)
+        counterTxt=findViewById(R.id.counter)
 
 
 
 
+        box1.setOnClickListener{
 
-
-
-     box1.setOnClickListener{
-
-         if(c1=="empty") {
-             if (option == 0) {
-                 img1.setImageResource(R.drawable.x)
-                 option = 1
-                 v1=1
-             } else {
-                 img1.setImageResource(R.drawable.o)
-                 option = 0
-                 v1=2
-             }
-             c1="filled"
-             checkWin()
-         }
-     }
+            if(c1=="empty") {
+                if (option == 0) {
+                    img1.setImageResource(R.drawable.x)
+                    option = 1
+                    v1=1
+                } else {
+                    img1.setImageResource(R.drawable.o)
+                    option = 0
+                    v1=2
+                }
+                c1="filled"
+                checkWin()
+            }
+        }
 
         box2.setOnClickListener{
 
@@ -254,46 +254,38 @@ var couunt = false
                 checkWin()
             }
         }
-        
+
+        startCounter()
+
 
     }
 
-    fun timer(count: Boolean, timer: Int, textView: TextView) {
-        if (timer <= 1) {
-            textView.text = "0"
-            return
-        }
+    private fun startCounter() {
+        runnable = object : Runnable {
+            override fun run() {
+                counter++
+                counterTxt.text = counter.toString()
 
-        val handler = Handler(Looper.getMainLooper())
-        var secondsPassed = 0
-
-        if (timer < 5) {
-            val runnable = object : Runnable {
-                override fun run() {
-                    textView.text = secondsPassed.toString()
-                    secondsPassed++
-
-                    // Check if count is false to stop the timer
-                    if (!count || textView.text == "0") {
-                        handler.removeCallbacks(this)
-                    } else {
-                        handler.postDelayed(this, 1000)
-                    }
-                }
+                handler.postDelayed(this, 1000)
             }
-            handler.postDelayed(runnable, 1000)
-        } else {
-            secondsPassed=0
-           // textView.text = "0"
         }
+        handler.post(runnable)
     }
 
+    private fun resetCounter() {
+        counter = 0
+        counterTxt.text = counter.toString()
+        handler.removeCallbacks(runnable)
+    }
+    override fun onStop() {
+        super.onStop()
+        resetCounter()
+    }
 
 
     fun checkWin() {
         var wins=0
-        var i = 1
-        checkTimer()
+
 
 
         if (option == 1) {
@@ -336,7 +328,7 @@ var couunt = false
                 ((v3 == 2) && (v6 == 2 )&& (v9 == 2)) ||
                 ((v1 == 2) &&( v5 == 2) && (v9 == 2)) ||
                 ((v7 == 2) && (v5 == 2) && (v3 == 2))
-                )
+            )
             {
                 wins=2
 
@@ -353,20 +345,16 @@ var couunt = false
         }
 
 
-            if (plays==9 && wins==0) {
-                playersturn.setText(" Match Tie")
-                Handler().postDelayed({
-                    playersturn.setText("Player 1's turn ")
-                    setImgBlank()
-                }, 2000)
+        if (plays==9 && wins==0) {
+            playersturn.setText(" Match Tie")
+            Handler().postDelayed({
+                playersturn.setText("Player 1's turn ")
+                setImgBlank()
+            }, 2000)
 
         }
 
     }
-
-
-
-
 
     fun setImgBlank(){
 
@@ -405,19 +393,9 @@ var couunt = false
         v8=0
         v9=0
 
-            matchon=false
+        matchon=false
 
-        timer(false,3,counter)
-
-
-
-
+        resetCounter()
     }
-
-    fun checkTimer(){
-        timer(true,6,counter)
-
-    }
-
 
 }
