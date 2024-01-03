@@ -1,5 +1,9 @@
 package com.example.tictactoeui
 
+/*
+*
+* package com.example.tictactoeui
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -12,7 +16,6 @@ import kotlinx.coroutines.delay
 import java.util.ArrayList
 import java.util.Timer
 import java.util.TimerTask
-
 import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
@@ -45,12 +48,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var counterTxt : TextView
     lateinit var playersturn : TextView
-
-    lateinit var playerscore : TextView
-    lateinit var computerscore :TextView
-    var pscore= 0
-    var cscore=0
-
 
     var c1="empty"
     var c2="empty"
@@ -110,8 +107,6 @@ class MainActivity : AppCompatActivity() {
         img9= findViewById(R.id.img9)
 
         counterTxt=findViewById(R.id.counter)
-        playerscore=findViewById(R.id.playerscore)
-        computerscore=findViewById(R.id.computerscore)
 
 
 
@@ -123,6 +118,10 @@ class MainActivity : AppCompatActivity() {
                     img1.setImageResource(R.drawable.x)
                     option = 1
                     v1=1
+                } else {
+                    img1.setImageResource(R.drawable.o)
+                    option = 0
+                    v1=2
                 }
                 c1="filled"
                 checkWin()
@@ -315,22 +314,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(wins==1){
-                handler.postDelayed({
-                    playersturn.setText(" You Won !!")
-                }, 500)
-
-                pscore++
-                playerscore.setText(pscore.toString())
-
-
-                handler.postDelayed({
-                    setImgBlank()
-                    playersturn.setText("Your turn")
-                }, 1500)
+                playersturn.setText("player 1 Wins")
+                setImgBlank()
 
             }
-            else if(plays!=9){
-                aimoves()
+            else{
+                playersturn.setText("player 2's Turn")
+
             }
 
         }
@@ -354,18 +344,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(wins==2){
-
-
-                    playersturn.setText("AI Wins")
-                cscore++
-                computerscore.setText(cscore.toString())
-                handler.postDelayed({
-                    setImgBlank()
-                }, 1500)
-
+                playersturn.setText("player 2 Wins")
+                setImgBlank()
             }
             else{
-                playersturn.setText("Your turn")
+                playersturn.setText("Player 1's turn")
             }
 
         }
@@ -374,6 +357,7 @@ class MainActivity : AppCompatActivity() {
         if (plays==9 && wins==0) {
             playersturn.setText(" Match Tie")
             Handler().postDelayed({
+                playersturn.setText("Player 1's turn ")
                 setImgBlank()
             }, 2000)
 
@@ -423,111 +407,62 @@ class MainActivity : AppCompatActivity() {
         resetCounter()
         handler.postDelayed({
             startCounter()
-
         },1000)
-        playersturn.setText("Your turn")
 
     }
 
     fun aimoves(){
 
-        if((v1!=0) || v2!=0 || v3!=0 ||  v4!=0 || v5!=0 || v6!=0 || v7!=0 || v8!=0 || v9!=0)
-        {
-            playersturn.setText("AI's Turn")
-            handler.postDelayed({
+        lateinit var boxlist: ArrayList<ImageView>
 
-
-
-
-
-
-
-            var boxlist: ArrayList<ImageView> = (ArrayList())
-
-            var list = arrayOf(R.drawable.o)
-
-
-            if (c1 == "empty") {
-                boxlist.add(img1)
-            }
-            if (c2 == "empty") {
-                boxlist.add(img2)
-            }
-            if (c3 == "empty") {
-                boxlist.add(img3)
-            }
-            if (c4 == "empty") {
-                boxlist.add(img4)
-            }
-            if (c5 == "empty") {
-                boxlist.add(img5)
-            }
-            if (c6 == "empty") {
-                boxlist.add(img6)
-            }
-            if (c7 == "empty") {
-                boxlist.add(img7)
-            }
-            if (c8 == "empty") {
-                boxlist.add(img8)
-            }
-            if (c9 == "empty") {
-                boxlist.add(img9)
-            }
-
-            System.out.println(boxlist)
-
-
-            var randombox = boxlist.random()
-
-            if (randombox != null) {
-
-                    randombox.setImageResource(R.drawable.o)
-
-
-                option = 0
-
-                if (randombox == img1) {
-                    v1 = 2
-                    c1 = "filled"
-                } else if (randombox == img2) {
-                    v2 = 2
-                    c2 = "filled"
-                } else if (randombox == img3) {
-                    v3 = 2
-                    c3 = "filled"
-                } else if (randombox == img4) {
-                    v4 = 2
-                    c4 = "filled"
-                } else if (randombox == img5) {
-                    v5 = 2
-                    c5 = "filled"
-                } else if (randombox == img6) {
-                    v6 = 2
-                    c6 = "filled"
-                } else if (randombox == img7) {
-                    v7 = 2
-                    c7 = "filled"
-                } else if (randombox == img8) {
-                    v8 = 2
-                    c8 = "filled"
-                } else if (randombox == img9) {
-                    v9 = 2
-                    c9 = "filled"
-                }
-
-                checkWin()
-
-            } else {
-                checkWin()
-            }
-            },500)
-
-
-
+        if(c1=="empty"){
+            boxlist.add(img1)
         }
+        if(c2=="empty"){
+            boxlist.add(img2)
+        }
+        if(c3=="empty"){
+            boxlist.add(img3)
+        }
+        if(c4=="empty"){
+            boxlist.add(img4)
+        }
+        if(c5=="empty"){
+            boxlist.add(img5)
+        }
+        if(c6=="empty"){
+            boxlist.add(img6)
+        }
+        if(c7=="empty"){
+            boxlist.add(img7)
+        }
+        if(c8=="empty"){
+            boxlist.add(img8)
+        }
+        if(c9=="empty"){
+            boxlist.add(img9)
+        }
+
+        var randombox = boxlist.random()
+
+
+                if (option == 0) {
+                    randombox.setImageResource(R.drawable.x)
+                    option = 1
+                    v9=1
+                } else {
+                    randombox.setImageResource(R.drawable.o)
+                    option = 0
+                    v9=2
+                }
+                c9="filled"
+                checkWin()
+            }
     }
 
 } // class end
 
 
+
+*
+* */
